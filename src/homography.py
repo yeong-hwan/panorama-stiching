@@ -58,3 +58,21 @@ def get_homography(src_points, dst_points):
     return H
 
 
+def ransac(src_points, dst_points):
+    """
+    Run the RANSAC algorithm and find the best homography
+
+    Args:
+        src_points: np.ndarray with shape (num_points,2), 2=> xy(or wh) axis
+        dst_points: np.ndarray with shape (num_points,2), 2=> xy(or wh) axis
+        (i)th correspondence: src_points[i] <-> dst_points[i]
+    Returns:
+        Homography matrix H: H(src)->dst
+        np.ndarray with shape (3,3)
+    Notice:
+        H[2,2] should be scaled to 1.0
+        get_homography() can be used
+    """
+    ##############
+    # write code #
+    ##############
