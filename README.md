@@ -8,7 +8,7 @@ pip install matplotlib
 
 ## Overview
 <div align="center">
-  <img src="img/overview.png" alt="drawing" width=700"/>
+  <img src="imgs/overview.png" alt="drawing" width=700"/>
 </div>
 
 - Stitching several images to get panorama image.
@@ -17,14 +17,14 @@ pip install matplotlib
 ### Source Iamges
 <div align="center">
   <figure class="third"> 
-    <img src="img/nightwatch_1.jpg" alt="drawing" width="200"/>
-    <img src="img/blank_space.png" alt="drawing" width="50"/>
-    <img src="img/nightwatch_2.jpg" alt="drawing" width="200"/>
+    <img src="imgs/nightwatch_1.jpg" alt="drawing" width="200"/>
+    <img src="imgs/blank_space.png" alt="drawing" width="50"/>
+    <img src="imgs/nightwatch_2.jpg" alt="drawing" width="200"/>
   </figure>
   <div>
     <p>
       <br/>
-      Rembrandt, &lt;The Nightwatch&gt;, 1642
+      <b>Rembrandt, &lt;The Nightwatch&gt;, 1642</b>
     </p>
     
   </div>
@@ -41,18 +41,18 @@ pip install matplotlib
 
 <div align="center">
   <figure class="third"> 
-    <img src="img/general_planar_projection.png" alt="drawing" width="300"/>
-    <img src="img/blank_space.png" alt="drawing" width="70"/>
-    <img src="img/estimating_homography.png" alt="drawing" width="250"/>
+    <img src="imgs/general_planar_projection.png" alt="drawing" width="300"/>
+    <img src="imgs/blank_space.png" alt="drawing" width="70"/>
+    <img src="imgs/estimating_homography.png" alt="drawing" width="250"/>
     </figure>
 </div>
 
 ## DLT(Direct Linear Transform)
 <div align="center">
   <figure class="third"> 
-    <img src="img/algebraic_distance_1.png" alt="drawing" width="300"/>
-    <img src="img/blank_space.png" alt="drawing" width="70"/>
-    <img src="img/algebraic_distance_2.png" alt="drawing" width="290"/>
+    <img src="imgs/algebraic_distance_1.png" alt="drawing" width="300"/>
+    <img src="imgs/blank_space.png" alt="drawing" width="70"/>
+    <img src="imgs/algebraic_distance_2.png" alt="drawing" width="290"/>
     </figure>
 </div>
 
@@ -63,7 +63,7 @@ When using SVD, there are problems such as having to select the smallest value, 
 
 ### Find h (8x1)
 <div align="center">
-  <img src="img/linear_equation.png" alt="drawing" width=400"/>
+  <img src="imgs/linear_equation.png" alt="drawing" width=400"/>
 </div>
 
 <br/>
@@ -99,7 +99,7 @@ A = A.astype(int)
 ### Find matrix B (2Nx1)
 
 <div align="center">
-  <img src="img/inverse_equation.png" alt="drawing" width=400"/>
+  <img src="imgs/inverse_equation.png" alt="drawing" width=400"/>
 </div>
 
 <br/>
@@ -135,16 +135,20 @@ return H
 Implement a function that warps according to the target plane using **Bilinar interpolation**. By applying a Homography matrix to the image, src_img is warped to fit the coordinates of the target(dst_img).
 
 <div align="center">
-  <img src="img/bilinear_interpolation.png" alt="drawing" width=400"/>
+  <img src="imgs/bilinear_interpolation.png" alt="drawing" width=500"/>
 </div>
 
-
-<div align="center">
-  <img src="img/bilinear_equation.png" alt="drawing" width=400"/>
-</div>
+Divide the coordinate scale into trans_x and trans_y and store it as a variable.
+Calculate the Villinar interpolation by dividing the water purification part and the decimal part into tx, ty / a, and b. Finally, it is trimmed into int form and returned.
 
 
 **Bilinear Interpolation**
+
+<div align="center">
+  <img src="imgs/bilinear_equation.png" alt="drawing" width=600"/>
+</div>
+
+
 ```python
 warped[y][x] = ((((1.0 - a) * (1.0 - b)) * src_img[ty][tx])
                 + ((a * (1.0 - b)) * src_img[ty][tx + 1])
@@ -152,9 +156,37 @@ warped[y][x] = ((((1.0 - a) * (1.0 - b)) * src_img[ty][tx])
                 + (((1.0 - a) * b) * src_img[ty + 1][tx]))
 ```
 
+
 ## Stitching
+Stitch only needs to add warped images and dst_img to the process of calculating get_coord, get_homography, and warp in order.
+
+The task of attaching the image was carried out simply by allocating dst_img value after the right-hand coordinate of warped(result)
+
+
+```python
+src_points, dst_points = get_coord(src_img, dst_img)
+
+H = get_homography(src_points, dst_points)
+
+Hi = np.linalg.inv(H)
+target_h = int((src_img.shape[0] + dst_img.shape[0]) * 1)
+target_w = int((src_img.shape[1] + dst_img.shape[1]) * 1)
+
+warped = warp(src_img, Hi, target_h, target_w)
+
+result_h, result_w = dst_img.shape[:2]
+result = np.copy(warped)
+result[0:result_h, 0:result_w, :] = dst_img
+```
+
+* Hi(H_inverse) should be applied to calculate (because it is the principle that A is warp by calculating Hi on B)
 
 ## Result
+
+<div align="center">
+  <img src="imgs/result.jpg" alt="drawing" width=600"/>
+</div>
+
 
 
 ## Libraries
@@ -168,5 +200,5 @@ Some slides are from [SeonJoo Kim](https://sites.google.com/site/seonjookim/), Y
 
 
 ### Environment
-OS: Mac Ventura
+OS: Mac Ventura  
 Language: Python(3.9.12)
