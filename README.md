@@ -96,7 +96,7 @@ for idx_a in range(len_of_pair):
 A = A.astype(int)
 ```
 
-### Get matrix B (2Nx1)
+### Find matrix B (2Nx1)
 
 <div align="center">
   <img src="img/inverse_equation.png" alt="drawing" width=400"/>
@@ -132,6 +132,25 @@ return H
 ```
 
 ## Warping
+Implement a function that warps according to the target plane using **Bilinar interpolation**. By applying a Homography matrix to the image, src_img is warped to fit the coordinates of the target(dst_img).
+
+<div align="center">
+  <img src="img/bilinear_interpolation.png" alt="drawing" width=400"/>
+</div>
+
+
+<div align="center">
+  <img src="img/bilinear_equation.png" alt="drawing" width=400"/>
+</div>
+
+
+**Bilinear Interpolation**
+```python
+warped[y][x] = ((((1.0 - a) * (1.0 - b)) * src_img[ty][tx])
+                + ((a * (1.0 - b)) * src_img[ty][tx + 1])
+                + ((a * b) * src_img[ty + 1][tx + 1])
+                + (((1.0 - a) * b) * src_img[ty + 1][tx]))
+```
 
 ## Stitching
 
